@@ -28,9 +28,9 @@ import { Question } from "../question";
 
 @Component
 export class SurveyElementVue extends Vue {
-  @Prop css: any;
-  @Prop survey: SurveyModel;
-  @Prop element: IElement;
+  @Prop() css: any;
+  @Prop() survey: SurveyModel;
+  @Prop() element: IElement;
 
   getWidgetComponentName(element: Question) {
     if (element.customWidget) {
