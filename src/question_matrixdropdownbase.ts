@@ -28,7 +28,7 @@ export interface IMatrixDropdownData {
     row: MatrixDropdownRowModelBase,
     columnName: string,
     newRowValue: any
-  );
+  ): void;
   getRowIndex(row: MatrixDropdownRowModelBase): number;
   validateCell(
     row: MatrixDropdownRowModelBase,
@@ -48,7 +48,7 @@ export interface IMatrixDropdownData {
 
 export interface IMatrixColumnOwner extends ILocalizableOwner {
   getRequiredText(): string;
-  onColumnPropertiesChanged(column: MatrixDropdownColumn);
+  onColumnPropertiesChanged(column: MatrixDropdownColumn): void;
   getCellType(): string;
 }
 
@@ -80,7 +80,12 @@ export var matrixDropdownColumnTypes = {
       "optionsCaption",
       "otherText"
     ],
-    onCellQuestionUpdate: (cellQuestion, column, question, data) => {
+    onCellQuestionUpdate: (
+      cellQuestion: any,
+      column: any,
+      question: any,
+      data: any
+    ) => {
       onUpdateSelectBaseCellQuestion(cellQuestion, column, question, data);
       if (!cellQuestion.optionsCaption)
         cellQuestion.optionsCaption = question.optionsCaption;
@@ -88,7 +93,12 @@ export var matrixDropdownColumnTypes = {
   },
   checkbox: {
     properties: ["choices", "choicesOrder", "choicesByUrl", "otherText"],
-    onCellQuestionUpdate: (cellQuestion, column, question, data) => {
+    onCellQuestionUpdate: (
+      cellQuestion: any,
+      column: any,
+      question: any,
+      data: any
+    ) => {
       onUpdateSelectBaseCellQuestion(cellQuestion, column, question, data);
       cellQuestion.colCount =
         column.colCount > -1 ? column.colCount : question.columnColCount;
@@ -96,7 +106,12 @@ export var matrixDropdownColumnTypes = {
   },
   radiogroup: {
     properties: ["choices", "choicesOrder", "choicesByUrl", "otherText"],
-    onCellQuestionUpdate: (cellQuestion, column, question, data) => {
+    onCellQuestionUpdate: (
+      cellQuestion: any,
+      column: any,
+      question: any,
+      data: any
+    ) => {
       onUpdateSelectBaseCellQuestion(cellQuestion, column, question, data);
       cellQuestion.colCount =
         column.colCount > -1 ? column.colCount : question.columnColCount;
@@ -104,21 +119,41 @@ export var matrixDropdownColumnTypes = {
   },
   text: {
     properties: ["placeHolder", "inputType", "maxLength"],
-    onCellQuestionUpdate: (cellQuestion, column, question, data) => {}
+    onCellQuestionUpdate: (
+      cellQuestion: any,
+      column: any,
+      question: any,
+      data: any
+    ) => {}
   },
   comment: {
     properties: ["placeHolder", "rows", "maxLength"],
-    onCellQuestionUpdate: (cellQuestion, column, question, data) => {}
+    onCellQuestionUpdate: (
+      cellQuestion: any,
+      column: any,
+      question: any,
+      data: any
+    ) => {}
   },
   boolean: {
     properties: ["defaultValue"],
-    onCellQuestionUpdate: (cellQuestion, column, question, data) => {
+    onCellQuestionUpdate: (
+      cellQuestion: any,
+      column: any,
+      question: any,
+      data: any
+    ) => {
       cellQuestion.showTitle = true;
     }
   },
   expression: {
     properties: ["expression"],
-    onCellQuestionUpdate: (cellQuestion, column, question, data) => {}
+    onCellQuestionUpdate: (
+      cellQuestion: any,
+      column: any,
+      question: any,
+      data: any
+    ) => {}
   }
 };
 
@@ -149,7 +184,7 @@ export class MatrixDropdownColumn extends Base implements ILocalizableOwner {
   }
   getDynamicProperties(): Array<string> {
     var qType = this.calcCellQuestionType();
-    var qDefinition = matrixDropdownColumnTypes[qType];
+    var qDefinition = (<any>matrixDropdownColumnTypes)[qType];
     if (qDefinition) return qDefinition.properties;
     return [];
   }
@@ -190,7 +225,7 @@ export class MatrixDropdownColumn extends Base implements ILocalizableOwner {
   public get isVisible() {
     return this._isVisible;
   }
-  public setIsVisible(newVal) {
+  public setIsVisible(newVal: boolean) {
     this._isVisible = newVal;
   }
   public get name() {
@@ -297,7 +332,7 @@ export class MatrixDropdownColumn extends Base implements ILocalizableOwner {
   public updateCellQuestion(cellQuestion: Question, data: any) {
     this.setQuestionProperties(cellQuestion);
     var qType = this.calcCellQuestionType();
-    var qDefinition = matrixDropdownColumnTypes[qType];
+    var qDefinition = (<any>matrixDropdownColumnTypes)[qType];
     if (qDefinition && qDefinition["onCellQuestionUpdate"]) {
       qDefinition["onCellQuestionUpdate"](
         cellQuestion,
@@ -357,7 +392,7 @@ export class MatrixDropdownColumn extends Base implements ILocalizableOwner {
     }
   }
   private getProperties(curCellType: string): Array<JsonObjectProperty> {
-    var qDef = matrixDropdownColumnTypes[curCellType];
+    var qDef = (<any>matrixDropdownColumnTypes)[curCellType];
     if (!qDef || !qDef.properties) return [];
     return JsonObject.metaData.findProperties(curCellType, qDef.properties);
   }
@@ -365,9 +400,9 @@ export class MatrixDropdownColumn extends Base implements ILocalizableOwner {
     var properties = this.getProperties(curCellType);
     for (var i = 0; i < properties.length; i++) {
       var prop = properties[i];
-      delete this[prop.name];
+      delete (<any>this)[prop.name];
       if (prop.serializationProperty) {
-        delete this[prop.serializationProperty];
+        delete (<any>this)[prop.serializationProperty];
       }
     }
   }
@@ -390,12 +425,12 @@ export class MatrixDropdownColumn extends Base implements ILocalizableOwner {
     var desc = {
       configurable: true,
       get: function() {
-        return question[propName];
+        return (<any>question)[propName];
       }
     };
     if (!isReadOnly) {
-      desc["set"] = function(v: any) {
-        question[propName] = v;
+      (<any>desc)["set"] = function(v: any) {
+        (<any>question)[propName] = v;
       };
     }
     Object.defineProperty(this, propName, desc);
@@ -417,10 +452,10 @@ export class MatrixDropdownCell {
       property => {
         let propertyName = property.name;
         if (
-          column[propertyName] !== undefined &&
+          (<any>column)[propertyName] !== undefined &&
           this.questionValue.getPropertyValue(propertyName, null) == null
         ) {
-          this.questionValue[propertyName] = column[propertyName];
+          (<any>this.questionValue)[propertyName] = (<any>column)[propertyName];
         }
       }
     );
@@ -454,7 +489,7 @@ export class MatrixDropdownRowModelBase
   private rowValues: HashTable<any> = {};
   private isSettingValue: boolean = false;
   private idValue: string;
-  private textPreProcessor;
+  private textPreProcessor: TextPreProcessor;
 
   public cells: Array<MatrixDropdownCell> = [];
 
@@ -478,7 +513,7 @@ export class MatrixDropdownRowModelBase
   public get id(): string {
     return this.idValue;
   }
-  public get rowName() {
+  public get rowName(): any {
     return null;
   }
   public get value(): any {
@@ -689,7 +724,7 @@ export class QuestionMatrixDropdownModelBase
   columnLayoutChangedCallback: () => void;
 
   protected createColumnValues() {
-    return this.createNewArray("columns", item => {
+    return this.createNewArray("columns", (item: any) => {
       item.colOwner = this;
     });
   }
@@ -700,7 +735,7 @@ export class QuestionMatrixDropdownModelBase
     this.choicesValue = this.createItemValues("choices");
     this.createLocalizableString("optionsCaption", this);
     this.registerFunctionOnPropertyValueChanged("columns", function(
-      newColumns
+      newColumns: any
     ) {
       self.updateColumnsIndexes(newColumns);
       self.generatedVisibleRows = null;
@@ -752,11 +787,11 @@ export class QuestionMatrixDropdownModelBase
     var options = {
       rowValue: row.value,
       row: row,
-      column: null,
-      columnName: null,
-      cell: null,
-      cellQuestion: null,
-      value: null
+      column: <any>null,
+      columnName: <any>null,
+      cell: <any>null,
+      cellQuestion: <any>null,
+      value: <any>null
     };
     for (var i = 0; i < this.visibleColumns.length; i++) {
       options.column = this.columns[i];
@@ -867,7 +902,7 @@ export class QuestionMatrixDropdownModelBase
     properties: HashTable<any>
   ) {
     if (!this.generatedVisibleRows) return;
-    var newValues = {};
+    var newValues: {[index: string]: any} = {};
     if (values && values instanceof Object) {
       newValues = JSON.parse(JSON.stringify(values));
     }
@@ -981,7 +1016,7 @@ export class QuestionMatrixDropdownModelBase
    * @param rowIndex row index from 0 to visible row count - 1.
    * @param rowValue an object {"column name": columnValue,... }
    */
-  public setRowValue(rowIndex: number, rowValue: any) {
+  public setRowValue(rowIndex: number, rowValue: any): any {
     if (rowIndex < 0) return null;
     var visRows = this.visibleRows;
     if (rowIndex >= visRows.length) return null;
@@ -1153,7 +1188,7 @@ export class QuestionMatrixDropdownModelBase
   ) {
     if (!this.survey) return;
     var self = this;
-    var getQuestion = function(colName) {
+    var getQuestion = function(colName: any) {
       for (var i = 0; self.columns.length; i++) {
         if (self.columns[i].name === colName) {
           return row.cells[i].question;
@@ -1218,7 +1253,7 @@ export class QuestionMatrixDropdownModelBase
   getRowIndex(row: MatrixDropdownRowModelBase): number {
     return this.visibleRows.indexOf(row);
   }
-  private isMatrixValueEmpty(val) {
+  private isMatrixValueEmpty(val: any) {
     if (!val) return;
     if (Array.isArray(val)) {
       for (var i = 0; i < val.length; i++) {

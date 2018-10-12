@@ -93,10 +93,10 @@ export class PanelModelBase extends SurveyElement
     this.createNewArray("rows");
     this.elementsValue = this.createNewArray(
       "elements",
-      function(item) {
+      function(item:any) {
         self.onAddElement(item, self.elementsValue.length);
       },
-      function(item) {
+      function(item:any) {
         self.onRemoveElement(item);
       }
     );
@@ -285,7 +285,7 @@ export class PanelModelBase extends SurveyElement
     for (var i = 0; i < questions.length; i++) {
       var q = questions[i];
       if (q.isEmpty()) continue;
-      data[q.getValueName()] = q["value"];
+      (<any>data)[q.getValueName()] = q["value"];
     }
     return data;
   }
@@ -300,7 +300,7 @@ export class PanelModelBase extends SurveyElement
       var q = questions[i];
       var comment = this.data.getComment(q.getValueName());
       if (!!comment) {
-        comments[q.getValueName()] = comment;
+        (<any>comments)[q.getValueName()] = comment;
       }
     }
     return comments;
@@ -365,7 +365,7 @@ export class PanelModelBase extends SurveyElement
     var rec = {
       fireCallback: fireCallback,
       focuseOnFirstError: focuseOnFirstError,
-      firstErrorQuestion: null,
+      firstErrorQuestion: <any>null,
       result: false
     };
     this.hasErrorsCore(rec);
@@ -375,7 +375,7 @@ export class PanelModelBase extends SurveyElement
     return rec.result;
   }
   private hasErrorsInPanels(rec: any) {
-    var errors = [];
+    var errors = <Array<any>>[];
     this.hasRequiredError(rec, errors);
     if (this.survey) {
       var customError = this.survey.validatePanel(this);
@@ -390,7 +390,7 @@ export class PanelModelBase extends SurveyElement
   }
   private hasRequiredError(rec: any, errors: Array<SurveyError>) {
     if (!this.isRequired) return;
-    var visQuestions = [];
+    var visQuestions = <Array<any>>[];
     this.addQuestionsToList(visQuestions, true);
     if (visQuestions.length == 0) return;
     for (var i = 0; i < visQuestions.length; i++) {
@@ -1036,7 +1036,7 @@ export class PanelModel extends PanelModelBase implements IElement {
   private getIndentSize(indent: number): string {
     if (indent < 1) return "";
     if (!this.data) return "";
-    var css = this.survey["css"];
+    var css = (<any>this).survey["css"];
     if (!css) return "";
     return indent * css.question.indent + "px";
   }
@@ -1095,7 +1095,7 @@ JsonObject.metaData.addClass(
     {
       name: "page",
       isSerializable: false,
-      choices: function(obj) {
+      choices: function(obj:any) {
         var survey = obj ? obj.survey : null;
         return survey ? survey.pages : [];
       }
