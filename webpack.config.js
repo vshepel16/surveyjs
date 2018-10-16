@@ -146,7 +146,7 @@ module.exports = function(options) {
             .pipe(fs.createWriteStream(packagePath + "survey-vue.min.js"));
         }
 
-        rimraf.sync(path.resolve(__dirname, "typings"));
+        //rimraf.sync(path.resolve(__dirname, "typings"));
 
         fs
           .createReadStream("./npmREADME.md")
