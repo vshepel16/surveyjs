@@ -377,7 +377,7 @@ export class MatrixDropdownColumn extends Base implements ILocalizableOwner {
   }
   protected setQuestionProperties(question: Question) {
     if (this.templateQuestion) {
-      var json = new JsonObject().toJsonObject(this.templateQuestion);
+      var json = new JsonObject().toJsonObject(this.templateQuestion, true);
       json.type = question.getType();
       new JsonObject().toObject(json, question);
     }
@@ -451,15 +451,11 @@ export class MatrixDropdownCell {
     CustomPropertiesCollection.getProperties(column.getType()).forEach(
       property => {
         let propertyName = property.name;
-        if (
-          (<any>column)[propertyName] !== undefined &&
-          this.questionValue.getPropertyValue(propertyName, null) == null
-        ) {
+        if ((<any>column)[propertyName] !== undefined) {
           (<any>this.questionValue)[propertyName] = (<any>column)[propertyName];
         }
       }
     );
-    Object.keys(column).forEach(key => {});
     this.questionValue.updateCustomWidget();
   }
   public get question(): Question {
@@ -902,7 +898,7 @@ export class QuestionMatrixDropdownModelBase
     properties: HashTable<any>
   ) {
     if (!this.generatedVisibleRows) return;
-    var newValues: {[index: string]: any} = {};
+    var newValues: { [index: string]: any } = {};
     if (values && values instanceof Object) {
       newValues = JSON.parse(JSON.stringify(values));
     }

@@ -102,6 +102,9 @@ export interface IConditionRunner {
 export interface ISurveyElement {
   name: string;
   isVisible: boolean;
+  isPage: boolean;
+  setSurveyImpl(value: ISurveyImpl): any;
+  onSurveyLoad(): any;
   setSurveyImpl(value: ISurveyImpl): any;
   onSurveyLoad(): any;
   getType(): string;
@@ -616,6 +619,9 @@ export class SurveyElement extends Base implements ISurveyElement {
   }
   public setVisibleIndex(index: number): number {
     return 0;
+  }
+  public get isPage() {
+    return false;
   }
   protected get textProcessor(): ITextProcessor {
     return this.textProcessorValue;
