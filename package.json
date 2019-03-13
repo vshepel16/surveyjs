@@ -29,7 +29,6 @@
   },
   "version": "1.0.76",
   "name": "surveyjs",
-  "private": true,
   "dependencies": {
     "bootstrap": "^3.3.6",
     "default-passive-events": "^1.0.10",
