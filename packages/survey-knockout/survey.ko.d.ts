@@ -1,4 +1,4 @@
-/*Type definitions for Survey JavaScript library v1.0.73
+/*Type definitions for Survey JavaScript library v1.0.74
 Copyright (c) 2015-2019 Devsoft Baltic OÜ  - http://surveyjs.io/
 Definitions by: Devsoft Baltic OÜ <https://github.com/surveyjs/>
 */
@@ -547,7 +547,7 @@ export declare class QuestionRow extends QuestionRowModel {
     koGetType: any;
     koElementAfterRender: any;
     constructor(panel: PanelModelBase);
-    getElementType(el: any): "survey-question" | "survey-panel";
+    getElementType(el: any): "survey-panel" | "survey-question";
     koAfterRender(el: any, con: any): void;
 }
 export declare class PanelImplementorBase extends ImplementorBase {
