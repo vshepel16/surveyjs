@@ -24,6 +24,8 @@ import "../../localization/polish";
 import "../../localization/portuguese";
 import "../../localization/romanian";
 import "../../localization/russian";
+import "../../localization/ukrainian";
+import "../../localization/tajik";
 import "../../localization/simplified-chinese";
 import "../../localization/spanish";
 import "../../localization/swedish";
