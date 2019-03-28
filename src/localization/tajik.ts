@@ -70,4 +70,4 @@ export var tajikStrings = {
 };
 
 surveyLocalization.locales["tg"] = tajikStrings;
-surveyLocalization.localeNames["tg"] = "Tajik";
+surveyLocalization.localeNames["tg"] = "tajik";
