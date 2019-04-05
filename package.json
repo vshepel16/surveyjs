@@ -1,4 +1,5 @@
 {
+  "version": "1.0.1",
   "name": "surveyjs",
   "scripts": {
     "start": "npm run build_dev && live-server --port=7777",
